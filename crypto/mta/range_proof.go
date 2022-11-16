@@ -12,8 +12,8 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto/paillier"
+	"github.com/bnb-chain/tss-lib/common"
+	"github.com/bnb-chain/tss-lib/crypto/paillier"
 )
 
 const (
@@ -22,6 +22,7 @@ const (
 
 var (
 	zero = big.NewInt(0)
+	one  = big.NewInt(1)
 )
 
 type (

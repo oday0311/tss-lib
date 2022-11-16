@@ -7,17 +7,18 @@
 package mta
 
 import (
+	"context"
 	"math/big"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/binance-chain/tss-lib/common"
-	"github.com/binance-chain/tss-lib/crypto"
-	"github.com/binance-chain/tss-lib/crypto/paillier"
-	"github.com/binance-chain/tss-lib/ecdsa/keygen"
-	"github.com/binance-chain/tss-lib/tss"
+	"github.com/bnb-chain/tss-lib/common"
+	"github.com/bnb-chain/tss-lib/crypto"
+	"github.com/bnb-chain/tss-lib/crypto/paillier"
+	"github.com/bnb-chain/tss-lib/ecdsa/keygen"
+	"github.com/bnb-chain/tss-lib/tss"
 )
 
 // Using a modulus length of 2048 is recommended in the GG18 spec
@@ -28,7 +29,10 @@ const (
 func TestShareProtocol(t *testing.T) {
 	q := tss.EC().Params().N
 
-	sk, pk, err := paillier.GenerateKeyPair(testPaillierKeyLength, 10*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+
+	sk, pk, err := paillier.GenerateKeyPair(ctx, testPaillierKeyLength)
 	assert.NoError(t, err)
 
 	a := common.GetRandomPositiveInt(q)
@@ -58,7 +62,10 @@ func TestShareProtocol(t *testing.T) {
 func TestShareProtocolWC(t *testing.T) {
 	q := tss.EC().Params().N
 
-	sk, pk, err := paillier.GenerateKeyPair(testPaillierKeyLength, 10*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+
+	sk, pk, err := paillier.GenerateKeyPair(ctx, testPaillierKeyLength)
 	assert.NoError(t, err)
 
 	a := common.GetRandomPositiveInt(q)

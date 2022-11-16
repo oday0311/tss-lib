@@ -3,10 +3,10 @@
 
 [1]: https://img.shields.io/badge/license-MIT-blue.svg
 [2]: LICENSE
-[3]: https://godoc.org/github.com/binance-chain/tss-lib?status.svg
-[4]: https://godoc.org/github.com/binance-chain/tss-lib
-[5]: https://goreportcard.com/badge/github.com/binance-chain/tss-lib
-[6]: https://goreportcard.com/report/github.com/binance-chain/tss-lib
+[3]: https://godoc.org/github.com/bnb-chain/tss-lib?status.svg
+[4]: https://godoc.org/github.com/bnb-chain/tss-lib
+[5]: https://goreportcard.com/badge/github.com/bnb-chain/tss-lib
+[6]: https://goreportcard.com/report/github.com/bnb-chain/tss-lib
 
 Permissively MIT Licensed.
 
@@ -43,12 +43,6 @@ The `LocalParty` that you use should be from the `keygen`, `signing` or `reshari
 
 ### Setup
 ```go
-// Set up elliptic curve
-// use ECDSA, which is used by default
-tss.SetCurve(s256k1.S256()) 
-// or use EdDSA
-// tss.SetCurve(edwards.Edwards()) 
-
 // When using the keygen party it is recommended that you pre-compute the "safe primes" and Paillier secret beforehand because this can take some time.
 // This code will generate those parameters using a concurrency limit equal to the number of available CPU cores.
 preParams, _ := keygen.GeneratePreParams(1 * time.Minute)
@@ -62,7 +56,14 @@ parties := tss.SortPartyIDs(getParticipantPartyIDs())
 // The `uniqueKey` is a unique identifying key for this peer (such as its p2p public key) as a big.Int.
 thisParty := tss.NewPartyID(id, moniker, uniqueKey)
 ctx := tss.NewPeerContext(parties)
-params := tss.NewParameters(ctx, thisParty, len(parties), threshold)
+
+// Select an elliptic curve
+// use ECDSA
+curve := tss.S256()
+// or use EdDSA
+// curve := tss.Edwards()
+
+params := tss.NewParameters(curve, ctx, thisParty, len(parties), threshold)
 
 // You should keep a local mapping of `id` strings to `*PartyID` instances so that an incoming message can have its origin party's `*PartyID` recovered for passing to `UpdateFromBytes` (see below)
 partyIDMap := make(map[string]*PartyID)
@@ -150,7 +151,7 @@ Additionally, there should be a mechanism in your transport to allow for "reliab
 Timeouts and errors should be handled by your application. The method `WaitingFor` may be called on a `Party` to get the set of other parties that it is still waiting for messages from. You may also get the set of culprit parties that caused an error from a `*tss.Error`.
 
 ## Security Audit
-A full review of this library was carried out by Kudelski Security and their final report was made available in October, 2019. A copy of this report [`audit-binance-tss-lib-final-20191018.pdf`](https://github.com/binance-chain/tss-lib/releases/download/v1.0.0/audit-binance-tss-lib-final-20191018.pdf) may be found in the v1.0.0 release notes of this repository.
+A full review of this library was carried out by Kudelski Security and their final report was made available in October, 2019. A copy of this report [`audit-binance-tss-lib-final-20191018.pdf`](https://github.com/bnb-chain/tss-lib/releases/download/v1.0.0/audit-binance-tss-lib-final-20191018.pdf) may be found in the v1.0.0 release notes of this repository.
 
 ## References
 \[1\] https://eprint.iacr.org/2019/114.pdf
